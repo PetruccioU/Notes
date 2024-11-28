@@ -6,7 +6,7 @@ namespace Notes.Controllers;
 [Route("[controller]")] // route for this controller
 public class NotesController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet]  // attribute for this method 
     public async Task<IActionResult> Get()
     {
         return Ok("Get");
