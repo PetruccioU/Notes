@@ -1,8 +1,8 @@
 namespace Notes.Models;
 
-public class NoteModel
+public class NotesModel
 {
-    public NoteModel(string title, string description)
+    public NotesModel(string title, string description)
     {
         Title = title;
         Description = description;
