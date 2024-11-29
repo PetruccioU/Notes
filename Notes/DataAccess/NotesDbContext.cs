@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Notes.Models;
 
 namespace Notes.DataAccess;
 
@@ -10,6 +11,8 @@ public class NotesDbContext: DbContext
     {
         _configuration = configuration;
     }
+    
+    public DbSet<NotesModel> NotesModels => Set<NotesModel>(); // Todo: learn about DbSet
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
