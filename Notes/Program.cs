@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.AddDbContext<NotesDbContext>(); // AddScope<NotesDbContext>();
+builder.Services.AddScoped<NotesDbContext>(); // db context registered
 
 var app = builder.Build();
 
