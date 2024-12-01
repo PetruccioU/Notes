@@ -35,7 +35,7 @@ public class NotesController : ControllerBase
     }
     
     [HttpGet]  // attribute for this method 
-    public async Task<IActionResult> Get(GetNotesRequestContract request, CancellationToken ct)
+    public async Task<IActionResult> Get([FromQuery] GetNotesRequestContract request, CancellationToken ct)
     {
         try
         {
