@@ -6,8 +6,8 @@ public class NotesModel
     {
         Title = title;
         Description = description;
-        CreatedAt = DateTime.Now;
-        UpdatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
         Id = Guid.NewGuid();
     }
     

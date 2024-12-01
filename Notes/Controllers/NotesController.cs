@@ -41,8 +41,9 @@ public class NotesController : ControllerBase
         {
             // search filtering 
             var notesQuery = _dbContext.Notes
-                .Where(n => !string.IsNullOrEmpty(request.Search) && 
-                            n.Title.ToLower().Contains(request.Search.ToLower()));
+                .Where(n => string.IsNullOrEmpty(request.Search) || 
+                            n.Title.ToLower().Contains(request.Search.ToLower())
+                            || n.Description.ToLower().Contains(request.Search.ToLower()));
 
             if (!string.IsNullOrEmpty(request.SortItem))
             {
@@ -69,11 +70,6 @@ public class NotesController : ControllerBase
                 .Take(pageSize)                   // Take the records for the current page
                 .Select(n => new NoteDto(n.Id, n.Title, n.Description, n.CreatedAt, n.UpdatedAt))
                 .ToListAsync(ct);
-            
-        
-            // var notes = await notesQuery
-            //     .Select(n => new NoteDto(n.Id, n.Title, n.Description, n.CreatedAt, n.UpdatedAt))
-            //     .ToListAsync(ct);
         
             return Ok(new GetNotesResponseContract(notesDtos));
         }
