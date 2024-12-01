@@ -33,10 +33,12 @@ public class NotesController : ControllerBase
     [HttpGet]  // attribute for this method 
     public async Task<IActionResult> Get(GetNotesRequestContract request, CancellationToken ct)
     {
+        // search filtering 
         var notesQuery = _dbContext.Notes
             .Where(n => !string.IsNullOrEmpty(request.Search) && 
                         n.Title.ToLower().Contains(request.Search.ToLower()));
 
+        // sorting 
         if (request.Search == "desc")
         {
             notesQuery = notesQuery.OrderByDescending(n => n.CreatedAt);
@@ -46,8 +48,23 @@ public class NotesController : ControllerBase
             notesQuery = notesQuery.OrderBy(n => n.CreatedAt);
         }
         
-        var notes = await notesQuery.ToListAsync(ct);
         // ToDo: make pagination
+        // Pagination logic
+        var pageNumber = request.PageNumber > 0 ? request.PageNumber : 1; // Default to page 1
+        var pageSize = request.PageSize > 0 ? request.PageSize : 10;     // Default to 10 items per page
+
+        var totalRecords = await notesQuery.CountAsync(ct); // Get the total count of records
+        var notes = await notesQuery
+            .Skip((pageNumber - 1) * pageSize) // Skip records for previous pages
+            .Take(pageSize)                   // Take the records for the current page
+            .Select(n => new NoteDto(n.Id, n.Title, n.Description, n.CreatedAt, n.UpdatedAt))
+            .ToListAsync(ct);
+        
+        
+        
+        // var notes = await notesQuery
+        //     .Select(n => new NoteDto(n.Id, n.Title, n.Description, n.CreatedAt, n.UpdatedAt))
+        //     .ToListAsync(ct);
         
         return Ok("Get");
     }
