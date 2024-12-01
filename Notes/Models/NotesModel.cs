@@ -7,6 +7,7 @@ public class NotesModel
         Title = title;
         Description = description;
         CreatedAt = DateTime.Now;
+        UpdatedAt = DateTime.Now;
         Id = Guid.NewGuid();
     }
     
@@ -17,4 +18,7 @@ public class NotesModel
     public string Description { get; init; }
     
     public DateTime CreatedAt { get; init; }
+    
+    public DateTime UpdatedAt { get; init; }
+    
 }
