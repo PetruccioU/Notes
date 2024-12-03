@@ -93,16 +93,44 @@ public class NotesController : ControllerBase
     
 
     [HttpPut]
-    public async Task<IActionResult> Update()
+    public async Task<IActionResult> Update([FromBody] UpdateNotesRequestContract request, CancellationToken ct)
     {
-        // ToDo: add implementation of Update method
-        return Ok("Put");
+        try
+        {
+            var updateQuery = _dbContext.Notes.Where(n => n.Id == request.Id);
+            
+            // Perform the update
+            await updateQuery.ExecuteUpdateAsync(updates => updates
+                .SetProperty(n => n.Title, n => request.Title ?? n.Title)
+                .SetProperty(n => n.Description, n => request.Description ?? n.Description)
+                .SetProperty(n => n.UpdatedAt, _ => DateTime.UtcNow), ct);
+            
+            await _dbContext.SaveChangesAsync(ct);
+            return Ok(new { message = "Note updated successfully" });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while processing the Update request.");
+            return StatusCode(500, new { message = "Internal server error", details = e.Message });
+        }
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete()
+    public async Task<IActionResult> Delete([FromBody] DeleteNotesRequestContract request, CancellationToken ct)
     {
-        // ToDo: add implementation of Delete method
-        return Ok("Delete");
+        try
+        {
+            await _dbContext.Notes
+                .Where(n => n.Id.Equals(request.Id))
+                .ExecuteDeleteAsync(ct);  // remove from db context
+            await _dbContext.SaveChangesAsync(ct);
+            return Ok("Delete");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while processing the Delete request.");
+            return StatusCode(500, new { message = "Internal server error", details = e.Message });
+        }
+        
     }
 }
