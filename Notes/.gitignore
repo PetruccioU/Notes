@@ -17,6 +17,12 @@ riderModule.iml
 *.user
 *.userosscache
 *.sln.docstates
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
